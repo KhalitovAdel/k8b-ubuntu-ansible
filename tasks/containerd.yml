@@ -45,11 +45,11 @@
     register: OS_ARCH
 
   - name: Print variables
-  ansible.builtin.debug:
-    msg:
-    - "OS_ID: {{ OS_ID.stdout }}"
-    - "VERSION_CODENAME: {{ VERSION_CODENAME.stdout }}"
-    - "OS_ARCH: {{ OS_ARCH.stdout }}"
+    ansible.builtin.debug:
+      msg:
+        - "OS_ID: {{ OS_ID.stdout }}"
+        - "VERSION_CODENAME: {{ VERSION_CODENAME.stdout }}"
+        - "OS_ARCH: {{ OS_ARCH.stdout }}"
     
   - name: Install Docker apt key
     apt_key:
@@ -58,7 +58,7 @@
 
   - name: Add containerd repository
     apt_repository:
-      repo: "deb [arch={{ OS_ARCH.stdout }}] https://download.docker.com/linux/{{ OS_ID.stdout }} {{ VERSION_CODENAME.stdout }} stable"
+      repo: "deb [arch={{ OS_ARCH.stdout }}] https://download.docker.com/linux/{{ OS_ID.stdout }} jammy stable"
       state: present
       update_cache: true
 

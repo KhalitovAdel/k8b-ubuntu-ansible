@@ -21,9 +21,17 @@
   
   - name: Install required tools for Kubernetes
     apt: 
-      name: ['apt-transport-https', 'ca-certificates', 'curl', 'gnupg2', 'software-properties-common']
+      name: ['apt-transport-https', 'ca-certificates', 'curl', 'gnupg2', 'software-properties-common', 'gpg']
       update_cache: true
       state: present 
+  
+  - name: Create a keyring directory
+    file:
+      path: /etc/apt/keyrings
+      state: directory
+
+  - name: Get os type (ubuntu | debian)
+    shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 
   - name: Install Kubernetes apt key
     apt_key:
@@ -32,7 +40,7 @@
 
   - name: Add Kubernetes repository
     apt_repository:
-      repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+      repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /"
       state: present
       update_cache: true
 

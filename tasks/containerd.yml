@@ -31,15 +31,27 @@
       name: ['apt-transport-https', 'ca-certificates', 'curl', 'gnupg2', 'software-properties-common']
       update_cache: true
       state: present 
+      
+  - name: Выполнить команду с использованием shell
+    shell: awk -F= '/^ID=/ {print $2}' /etc/os-release
+    register: OS_ID
 
+  - name: Выполнить команду с использованием shell
+    shell: . /etc/os-release && echo "$VERSION_CODENAME"
+    register: VERSION_CODENAME
+
+  - name: Выполнить команду с использованием shell
+    shell: dpkg --print-architecture
+    register: OS_ARCH
+    
   - name: Install Docker apt key
     apt_key:
-      url: https://download.docker.com/linux/debian/gpg 
+      url: "https://download.docker.com/linux/{{ OS_ID }}/gpg"
       state: present
 
   - name: Add containerd repository
     apt_repository:
-      repo: "deb [arch=amd64] https://download.docker.com/linux/debian bullseye stable"
+      repo: "deb [arch={{ OS_ARCH }}] https://download.docker.com/linux/{{ OS_ID }} {{ VERSION_CODENAME }} stable"
       state: present
       update_cache: true
 

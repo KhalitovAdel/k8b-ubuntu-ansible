@@ -32,17 +32,24 @@
       update_cache: true
       state: present 
       
-  - name: Выполнить команду с использованием shell
+  - name: Get os type (ubuntu | debian)
     shell: awk -F= '/^ID=/ {print $2}' /etc/os-release
     register: OS_ID
 
-  - name: Выполнить команду с использованием shell
+  - name: Get os version codename (jammy | bullseye)
     shell: . /etc/os-release && echo "$VERSION_CODENAME"
     register: VERSION_CODENAME
 
-  - name: Выполнить команду с использованием shell
+  - name: Get os architecture (arm64 | amd64)
     shell: dpkg --print-architecture
     register: OS_ARCH
+
+  - name: Print variables
+  ansible.builtin.debug:
+    msg:
+    - "OS_ID: {{ OS_ID.stdout }}"
+    - "VERSION_CODENAME: {{ VERSION_CODENAME.stdout }}"
+    - "OS_ARCH: {{ OS_ARCH.stdout }}"
     
   - name: Install Docker apt key
     apt_key:

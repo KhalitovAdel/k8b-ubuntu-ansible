@@ -46,12 +46,12 @@
     
   - name: Install Docker apt key
     apt_key:
-      url: "https://download.docker.com/linux/{{ OS_ID }}/gpg"
+      url: "https://download.docker.com/linux/{{ OS_ID.stdout }}/gpg"
       state: present
 
   - name: Add containerd repository
     apt_repository:
-      repo: "deb [arch={{ OS_ARCH }}] https://download.docker.com/linux/{{ OS_ID }} {{ VERSION_CODENAME }} stable"
+      repo: "deb [arch={{ OS_ARCH.stdout }}] https://download.docker.com/linux/{{ OS_ID.stdout }} {{ VERSION_CODENAME.stdout }} stable"
       state: present
       update_cache: true
 
